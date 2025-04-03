@@ -1,0 +1,197 @@
+<div class="slideshow-container" data-autoplay="{{ section.settings.auto_rotate }}" data-speed="{{ section.settings.rotation_speed }}">
+  {% for block in section.blocks %}
+    <div class="slide" id="slide-{{ forloop.index }}">
+      {% if block.settings.image %}
+        <img src="{{ block.settings.image | img_url: 'master' }}" alt="Slide Image" class="slide-image desktop-only">
+      {% endif %}
+      {% if block.settings.mobile_image %}
+        <img src="{{ block.settings.mobile_image | img_url: 'master' }}" alt="Mobile Slide Image" class="slide-image mobile-only">
+      {% endif %}
+      <div class="slide-overlay">
+        <div class="slide-content">
+          <h2>{{ block.settings.heading }}</h2>
+          <p>{{ block.settings.subheading }}</p>
+          {% if block.settings.button_text != blank %}
+            <a href="{{ block.settings.button_link }}" class="slide-button">{{ block.settings.button_text }}</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<style>
+ .slideshow-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+.slide {
+  position: relative;
+  width: 100%;
+}
+.slide-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.desktop-only {
+  display: block;
+}
+.mobile-only {
+  display: none;
+}
+.slide-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Align text to left on desktop */
+  padding: 40px;
+}
+.slide-content {
+  color: white;
+  max-width: 500px;
+  text-align: center!important; /* Align text to left on desktop */
+}
+.slide-content h2 {
+  font-size: 28px;
+  margin-bottom: 10px;
+  color:white;
+}
+.slide-content p {
+  font-size: 25px;
+  margin-bottom: 20px;
+}
+.slide-button {
+  background-color: #c79b9b;
+  padding: 10px 20px;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none;
+  }
+  .mobile-only {
+    display: block;
+  }
+  .slide-overlay {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: auto;
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .slide-content {
+    max-width: 90%;
+    text-align: center; /* Center text for mobile */
+  }
+}
+
+</style>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    let slides = document.querySelectorAll(".slide");
+    let currentSlide = 0;
+    let autoRotate = {{ section.settings.auto_rotate | json }};
+    let rotationSpeed = {{ section.settings.rotation_speed | times: 1000 }};
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.style.display = i === index ? "block" : "none";
+      });
+    }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % slides.length;
+      showSlide(currentSlide);
+    }
+
+    showSlide(currentSlide);
+    if (autoRotate) {
+      setInterval(nextSlide, rotationSpeed);
+    }
+  });
+</script> 
+
+{% schema %}
+{
+  "name": "Slideshow",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "auto_rotate",
+      "label": "Enable auto-rotate",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "rotation_speed",
+      "label": "Rotation speed (seconds)",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "default": 5
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Slide image (Desktop)"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Slide image (Mobile)"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "MORE ENERGY, BETTER SLEEP, LESS STRESS, AND A PERFECT SCENT"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Subheading",
+          "default": "Proven health benefits. 100% Natural"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default": "READ MORE"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Slideshow",
+      "category": "Image"
+    }
+  ]
+}
+{% endschema %}

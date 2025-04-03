@@ -1,0 +1,158 @@
+<div class="product-carousel">
+  <button class="prev">&#10094;</button>
+  <div class="carousel-container">
+    {% for product in collections[section.settings.product_collection].products limit: 10 %}
+      <a href="{{ collections[section.settings.product_collection].url }}" class="product-card">
+        <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.title }}">
+        <div class="product-info">
+          <h3>{{ product.title }}</h3>
+          <p>{{ product.price | money }}</p>
+          <div class="rating">★★★★★</div>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+  <button class="next">&#10095;</button>
+</div>
+
+<style>
+  .product-carousel {
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 10px;
+  }
+  .carousel-container {
+    display: flex;
+    gap: 15px;
+    transition: transform 0.3s ease-in-out;
+  }
+  .product-card {
+    flex: 0 0 calc(100% / 6 - 15px);
+    padding: 10px;
+    background: white;
+    border-radius: 8px;
+    text-align: center;
+    text-decoration: none;
+    color: black;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  .product-card img {
+    width: 100%;
+    border-radius: 5px;
+  }
+  .product-info h3 {
+    font-size: 14px;
+    margin: 5px 0;
+  }
+  .rating {
+    color: gold;
+  }
+  .prev, .next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 50%;
+  }
+  .prev { left: 10px;z-index:1; }
+  .next { right: 10px; }
+
+  @media (max-width: 768px) {
+    .product-card {
+      flex: 0 0 calc(100% / 2 - 15px);
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const container = document.querySelector(".carousel-container");
+    const nextBtn = document.querySelector(".next");
+    const prevBtn = document.querySelector(".prev");
+    let productWidth = document.querySelector(".product-card").offsetWidth + 15;
+    let visibleProducts = window.innerWidth < 768 ? 2 : 6;
+    
+    // Duplicate first and last products for seamless looping
+    function duplicateProducts() {
+        const products = container.children;
+        for (let i = 0; i < visibleProducts; i++) {
+            let cloneFirst = products[i].cloneNode(true);
+            let cloneLast = products[products.length - 1 - i].cloneNode(true);
+            container.appendChild(cloneFirst);
+            container.insertBefore(cloneLast, products[0]);
+        }
+        container.style.transform = `translateX(-${productWidth * visibleProducts}px)`;
+    }
+    
+    duplicateProducts();
+    
+    let scrollAmount = productWidth * visibleProducts;
+    
+    function scrollCarousel(direction) {
+        if (direction === "next") {
+            scrollAmount += productWidth;
+        } else {
+            scrollAmount -= productWidth;
+        }
+
+        container.style.transition = "transform 0.3s ease-in-out";
+        container.style.transform = `translateX(-${scrollAmount}px)`;
+
+        setTimeout(() => {
+            let totalProducts = container.children.length;
+
+            if (scrollAmount >= productWidth * (totalProducts - visibleProducts)) {
+                container.style.transition = "none";
+                scrollAmount = productWidth * visibleProducts;
+                container.style.transform = `translateX(-${scrollAmount}px)`;
+            }
+
+            if (scrollAmount <= 0) {
+                container.style.transition = "none";
+                scrollAmount = productWidth * (totalProducts - (visibleProducts * 2));
+                container.style.transform = `translateX(-${scrollAmount}px)`;
+            }
+        }, 300);
+    }
+
+    nextBtn.addEventListener("click", function () {
+        scrollCarousel("next");
+    });
+
+    prevBtn.addEventListener("click", function () {
+        scrollCarousel("prev");
+    });
+
+    window.addEventListener("resize", function () {
+        productWidth = document.querySelector(".product-card").offsetWidth + 15;
+        visibleProducts = window.innerWidth < 768 ? 2 : 6;
+        scrollAmount = productWidth * visibleProducts;
+        container.style.transform = `translateX(-${scrollAmount}px)`;
+    });
+});
+</script>
+{% schema %}
+{
+  "name": "Product Carousel",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "product_collection",
+      "label": "Select Collection"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Carousel",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

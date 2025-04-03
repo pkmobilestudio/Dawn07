@@ -1,0 +1,241 @@
+<header class="site-header">
+  <div class="header-container">
+
+    <button class="hamburger md:hidden" onclick="toggleMenu()">☰</button>
+    <div class="logo">
+      <a href="{{ routes.root_url }}">
+        {% if section.settings.logo != blank %}
+          <img src="{{ section.settings.logo | img_url: '200x' }}" alt="Logo">
+        {% else %}
+          <span class="text-xl font-bold">LOGO</span>
+        {% endif %}
+      </a>
+    </div>
+
+    <!-- Desktop Navigation Menu (Dynamic from Shopify) -->
+    <ul class="menu">
+      {% for link in linklists[section.settings.menu].links %}
+        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+      {% endfor %}
+    </ul>
+
+    <!-- Icons for Search, Account, and Cart -->
+    <div class="header-icons">
+    <span class="icon">
+        <img src="https://cdn.shopify.com/s/files/1/0660/2090/1049/files/SEARCH.svg?v=1743667501" alt="Search">
+    </span>
+    <span class="icon">
+        <img src="https://cdn.shopify.com/s/files/1/0660/2090/1049/files/user-icon.svg?v=1743667499" alt="User">
+    </span>
+    <a href="/cart" class="icon">
+        <img src="https://cdn.shopify.com/s/files/1/0660/2090/1049/files/Shopping_bag_icon_69e603a8-963e-469c-80da-1062732206a6.svg?v=1743667499" alt="Cart">
+    </a>
+</div>
+  </div>
+</header>
+
+<!-- Mobile Menu -->
+<div id="mobile-menu" class="mobile-menu">
+  <button class="close-menu" onclick="toggleMenu()">×</button>
+  <ul>
+    {% for link in linklists[section.settings.menu].links %}
+      <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+    {% endfor %}
+  </ul>
+</div>
+
+<style>
+  /* Header General Styles */
+  .site-header {
+    width: 100%;
+    background: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    /* padding: 10px 20px; */
+    margin: auto;
+  }
+
+  /* Logo */
+  .logo img {
+    height: 40px;
+  }
+
+  /* Desktop Menu */
+  .menu {
+    display: flex;
+    gap: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    list-style: none;
+  }
+
+  .menu li {
+    list-style: none;
+  }
+
+  .menu li a {
+    text-decoration: none;
+    color: #333;
+    transition: color 0.3s ease-in-out;
+  }
+
+  /* Hover effect for all menu items */
+  .menu li a:hover {
+    color: #ff6600 !important;
+    cursor: pointer;
+  }
+
+  /* Header Icons */
+  .header-icons {
+    display: flex;
+    gap: 15px;
+  }
+
+  .icon {
+    font-size: 20px;
+    color: #4a4a4a;
+  }
+
+  /* Mobile Menu */
+  .hamburger {
+    display: none;
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .mobile-menu {
+    position: fixed;
+    top: 0;
+    left: -250px;
+    width: 250px;
+    height: 100%;
+    background: white;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    padding-top: 50px;
+  }
+
+  .mobile-menu ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .mobile-menu li {
+    padding: 15px;
+    text-align: left;
+    font-size: 18px;
+  }
+
+  .mobile-menu li a {
+    text-decoration: none;
+    color: #333;
+    display: block;
+    transition: color 0.3s;
+  }
+
+  .mobile-menu li a:hover {
+    color: #ff6600;
+  }
+
+  .close-menu {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 30px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hamburger {
+      display: block;
+    }
+
+    .menu {
+      display: none;
+    }
+  }
+
+  @media (min-width: 900px) and (max-width: 1200px) {
+    .menu {
+      font-size: 12px;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 900px) {
+    .menu {
+      font-size: 7px;
+    }
+  }
+
+  .header-icons {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.icon img {
+    width: 24px; /* Adjust size */
+    height: 24px;
+}
+
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #000;
+    color: #fff;
+    font-size: 12px;
+    width: 16px;
+    height: 16px;
+    text-align: center;
+    border-radius: 50%;
+}
+
+</style>
+
+<script>
+  function toggleMenu() {
+    const menu = document.getElementById("mobile-menu");
+    menu.style.left = menu.style.left === "0px" ? "-250px" : "0px";
+  }
+</script>
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Upload Logo"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Select Navigation Menu",
+      "default": "main-menu"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header",
+      "category": "Navigation"
+    }
+  ]
+}
+{% endschema %}

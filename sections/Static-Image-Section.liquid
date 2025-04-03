@@ -1,0 +1,51 @@
+<div class="static-image-section">
+  <div class="image-container">
+    {% if section.settings.static_image %}
+      <img src="{{ section.settings.static_image | img_url: 'master' }}" alt="Static Image">
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .static-image-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 20px;
+  }
+  .image-container img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  .text-overlay {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+</style>
+{% schema %}
+{
+  "name": "Static Image Section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "static_image",
+      "label": "Select Image"
+    },
+  ],
+  "presets": [
+    {
+      "name": "Static Image Section",
+      "category": "Image"
+    }
+  ]
+}
+{% endschema %}

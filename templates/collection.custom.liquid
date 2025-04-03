@@ -1,0 +1,325 @@
+<section class="collection-page">
+  <div class="collection-container">
+    <button id="filter-toggle" class="mobile-filter-btn">Filter & Sort</button>
+    <aside class="collection-sidebar" id="sidebar">
+      <h3>Archive Sale</h3>
+      <ul>
+        <li><a href="#all-products">All Products</a></li>
+        <li><a href="#aroma-diffusers">Aroma Diffusers</a></li>
+        <li><a href="#reed-diffusers">Reed Diffusers</a></li>
+        <li><a href="#scented-candles">Scented Candles</a></li>
+        <li><a href="#essential-oil-blends">Essential Oil Blends</a></li>
+        <li><a href="#single-essential-oils">Single Essential Oils</a></li>
+        <li><a href="#essential-oil-sets">Essential Oil Sets</a></li>
+        <li><a href="#essential-oil-mists">Essential Oil Mists</a></li>
+      </ul>
+
+      <h4>Sort by</h4>
+      <select id="sort-price" onchange="sortProducts()">
+        <option value="low-to-high">Low to High</option>
+        <option value="high-to-low">High to Low</option>
+      </select>
+    </aside>
+
+    <!-- Product Listing -->
+    <div class="collection-products">
+      {% for product in collection.products %}
+        <div class="product-card">
+          <a href="{{ product.url }}">
+            <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.title }}">
+          </a>
+          <h2>{{ product.title }}</h2>
+          <p class="price">
+            {% if product.compare_at_price > product.price %}
+              <span class="old-price">{{ product.compare_at_price | money }}</span>
+            {% endif %}
+            <span class="current-price">{{ product.price | money }}</span>
+          </p>
+          <!-- <button class="add-to-cart" data-product-id="{{ product.id }}">Add to Cart</button> -->
+          <button class="add-to-cart" data-variant-id="{{ product.variants.first.id }}"> Add to Cart</button>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section> 
+<style>  
+ .collection-container {  
+    display: flex;  
+    align-items: flex-start;  
+    justify-content: space-between;  
+    gap: 20px;  
+    padding: 20px;  
+    width: 100%;
+}
+
+.collection-sidebar {
+    width: 250px;
+    min-width: 250px;
+    max-width: 300px;
+    flex-shrink: 0;
+}
+
+
+  .collection-sidebar h3,  
+  .collection-sidebar h4 {  
+    margin: 10px 0;  
+  }  
+
+  .collection-sidebar ul {  
+    list-style-type: none;  
+    padding: 0;  
+  }  
+
+  .collection-sidebar ul li {  
+    margin: 5px 0;  
+  }  
+
+  .collection-sidebar ul li a {  
+    text-decoration: none;  
+    color: #333;  
+  }  
+
+ .collection-products {  
+    display: grid;  
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;  
+    justify-content: center;  
+    align-items: stretch;  
+    width: 100%;
+}
+
+
+
+  .product-card { 
+    border: 1px solid #ddd;  
+    padding: 15px;  
+    text-align: center;  
+    border-radius: 5px;  
+    transition: transform 0.2s;  
+  }  
+
+  .product-card:hover {  
+    transform: scale(1.05);  
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);  
+  }  
+
+  .product-card img {  
+    max-width: 100%;  
+    height: auto;  
+    border-radius: 5px;  
+  }  
+
+  .price {  
+    font-size: 16px;  
+    font-weight: bold;  
+    margin: 10px 0;  
+  }  
+
+  .old-price {  
+    text-decoration: line-through;  
+    color: red;  
+    margin-right: 5px;  
+  }  
+
+  .add-to-cart {  
+    background: #ff6600;  
+    color: white;  
+    padding: 10px;  
+    border: none;  
+    cursor: pointer;  
+    border-radius: 5px;  
+    width: 100%;  
+    transition: background 0.3s;  
+  }  
+
+  .add-to-cart:hover {  
+    background: #e65c00;  
+  }  
+  @media (max-width: 1024px) {  
+    .collection-products {  
+        grid-template-columns: repeat(3, 1fr);
+    }  
+}  
+
+@media (max-width: 768px) {  
+    .collection-products {  
+        grid-template-columns: repeat(2, 1fr);
+    }  
+}  
+
+@media (max-width: 480px) {  
+    .collection-products {  
+        grid-template-columns: repeat(1, 1fr);
+    }  
+}  
+@media (max-width: 768px) {
+    .mobile-filter-dropdown {
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        background: #fff;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        display: none;
+        z-index: 1000;
+        border-radius: 10px;
+    }
+
+    .mobile-filter-dropdown.show {
+        display: block;
+    }
+
+    .mobile-filter-btn {
+        display: block;
+        background: #ff6600;
+        color: white;
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .close-filter {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        position: absolute;
+        top: 10px;
+        right: 15px;
+    }
+}
+@media (min-width: 769px) {
+    .mobile-filter-btn {
+        display: none;
+    }
+}
+  @media (max-width: 768px) {  
+    /* Ensure filter button is at the top */
+    .collection-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* Make filter button full-width */
+    .mobile-filter-btn {
+        width: 100%;
+        text-align: center;
+        padding: 12px;
+        font-size: 16px;
+    }
+    .collection-products {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* 2 products per row */
+        gap: 15px;
+        width: 100%;
+        padding: 10px;
+    }
+
+    .product-card {
+        width: 100%;
+    }
+    .collection-sidebar {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        height: 100%;
+        width: 250px;
+        background: #fff;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+        transition: left 0.3s ease-in-out;
+        z-index: 1000;
+        padding: 20px;
+        overflow-y: auto;
+    }
+
+    .collection-sidebar.show {
+        left: 0;
+    }
+
+    .close-filter {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        position: absolute;
+        top: 10px;
+        right: 15px;
+    }
+}
+
+
+</style>  
+<script>  
+  function sortProducts() {  
+    let container = document.querySelector('.collection-products');  
+    let products = Array.from(container.children);  
+    let sortType = document.getElementById('sort-price').value;  
+
+    products.sort((a, b) => {  
+      let priceA = parseFloat(a.querySelector('.current-price').textContent.replace(/[^\d.]/g, ''));  
+      let priceB = parseFloat(b.querySelector('.current-price').textContent.replace(/[^\d.]/g, ''));  
+
+      return sortType === 'low-to-high' ? priceA - priceB : priceB - priceA;  
+    });  
+
+    container.innerHTML = '';  
+    products.forEach(product => container.appendChild(product));  
+  }  
+
+document.querySelectorAll('.add-to-cart').forEach(button => {
+  button.addEventListener('click', function () {
+    let variantId = this.getAttribute('data-variant-id');
+
+    if (!variantId) {
+      console.error("Error: Missing Variant ID!");
+      alert("Error: This product is missing a valid variant.");
+      return;
+    }
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      body: JSON.stringify({ id: Number(variantId), quantity: 1 }) 
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.id) {
+        alert('Product added to cart!');
+      } else {
+        alert('Error adding product to cart!');
+        console.log(data);
+      }
+    })
+    .catch(error => console.error('Error:', error));
+  });
+});
+  
+function updateCartCount() {
+  fetch('/cart.js')
+    .then(response => response.json())
+    .then(data => {
+      document.querySelector('.cart-count').textContent = data.item_count;
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
+ document.getElementById('filter-toggle').addEventListener('click', function() {
+    document.getElementById('filter-dropdown').classList.add('show');
+});
+
+document.getElementById('close-filter').addEventListener('click', function() {
+    document.getElementById('filter-dropdown').classList.remove('show');
+});
+
+</script>  
