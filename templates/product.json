@@ -45,6 +45,20 @@
             "show_gift_card_recipient": true
           }
         },
+        "libautech_amazon_buy_button_app_block_KbnEEX": {
+          "type": "shopify://apps/libautech-amazon-buy-button/blocks/app-block/8592c4d1-f97e-410c-adbc-4eb756054045",
+          "settings": {
+            "forceMarketplace": "none",
+            "button_border_radius": 2,
+            "margin_top": 0,
+            "margin_bottom": 0,
+            "px_width": 0,
+            "useInjectAfterSelector": false,
+            "injectAfterSelector": ".example-class",
+            "useCustomResourceId": false,
+            "customResourceId": "Product ID"
+          }
+        },
         "description": {
           "type": "description",
           "settings": {}
@@ -63,6 +77,7 @@
         "variant_picker",
         "quantity_selector",
         "buy_buttons",
+        "libautech_amazon_buy_button_app_block_KbnEEX",
         "description",
         "share"
       ],
@@ -99,35 +114,9 @@
         "padding_top": 36,
         "padding_bottom": 28
       }
-    },
-    "174376400474edc080": {
-      "type": "apps",
-      "blocks": {
-        "libautech_amazon_buy_button_app_block_gJb37R": {
-          "type": "shopify://apps/libautech-amazon-buy-button/blocks/app-block/8592c4d1-f97e-410c-adbc-4eb756054045",
-          "settings": {
-            "forceMarketplace": "none",
-            "button_border_radius": 2,
-            "margin_top": 0,
-            "margin_bottom": 0,
-            "px_width": 0,
-            "useInjectAfterSelector": false,
-            "injectAfterSelector": ".example-class",
-            "useCustomResourceId": false,
-            "customResourceId": "Product ID"
-          }
-        }
-      },
-      "block_order": [
-        "libautech_amazon_buy_button_app_block_gJb37R"
-      ],
-      "settings": {
-        "include_margins": true
-      }
     }
   },
   "order": [
-    "174376400474edc080",
     "main",
     "related-products"
   ]
